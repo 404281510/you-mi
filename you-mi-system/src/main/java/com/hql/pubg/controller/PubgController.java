@@ -1,4 +1,4 @@
-package com.hql.controller;
+package com.hql.pubg.controller;
 
 
 import com.alibaba.fastjson.JSON;
@@ -12,6 +12,11 @@ import com.github.gplnature.pubgapi.model.match.MatchResponse;
 import com.github.gplnature.pubgapi.model.participant.Participant;
 import com.github.gplnature.pubgapi.model.participant.ParticipantStats;
 import com.github.gplnature.pubgapi.model.player.Player;
+import com.hql.db.aop.anno.DataSourceType;
+import com.hql.pubg.dao.SystemTenantMapper;
+import jakarta.annotation.Resource;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -29,7 +35,14 @@ import java.util.stream.Collectors;
  * @date 2023/9/4 14:07
  */
 @Controller
+@Configuration
 public class PubgController {
+    @Resource
+    private JdbcTemplate jdbcTemplate;
+
+    @Resource
+    private SystemTenantMapper systemTenantMapper;
+
     @RequestMapping(value = "testPUBG" ,method = RequestMethod.GET)
     @ResponseBody
     public JSONObject testPUBG(String  pubgName) throws PubgClientException {
@@ -74,5 +87,18 @@ public class PubgController {
         jsonObject.put("num",num);
         jsonObject.put("damageDealt",String.format("%.2f",d));
         return jsonObject;
+    }
+
+    @RequestMapping(value = "testDB" ,method = RequestMethod.GET)
+    @ResponseBody
+    @DataSourceType("second")
+    public void testDB(String  pubgName)  {
+//        sqlSessionTemplate.getSqlSessionFactory().openSession().selectList("select * from system_tenant");
+//        List<Map<String,Object>> mapList = jdbcTemplate.queryForList("select * from system_tenant");
+        List<Map<String,Object>> mapList1 = systemTenantMapper.selectTenant();
+        mapList1.forEach(map -> {
+            System.out.println(map.entrySet());
+        });
+
     }
 }

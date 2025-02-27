@@ -4,18 +4,19 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.hql</groupId>
-    <artifactId>you-mi</artifactId>
-    <version>${revision}</version>
-    <packaging>pom</packaging>
-
-
     <properties>
         <revision>1.0-SNAPSHOT</revision>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+    <groupId>com.hql</groupId>
+    <artifactId>you-mi</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+
+
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -27,7 +28,7 @@
         <module>you-mi-dependencies</module>
         <module>you-mi-framework</module>
         <module>you-mi-system</module>
-        <module>you-mi-ai</module>
+<!--        <module>you-mi-ai</module>-->
     </modules>
     <dependencyManagement>
         <dependencies>
