@@ -14,6 +14,8 @@
         <fastjson.version>1.2.83</fastjson.version>
         <mysql.version>8.0.33</mysql.version>
         <mybatis.version>3.0.3</mybatis.version>
+        <jjwt.version>0.9.1</jjwt.version>
+        <jaxb.version>2.3.1</jaxb.version>
     </properties>
 
     <dependencyManagement>
@@ -48,7 +50,20 @@
                 <artifactId>mybatis-spring-boot-starter</artifactId>
                 <version>${mybatis.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>javax.xml.bind</groupId>
+                <artifactId>jaxb-api</artifactId>
+                <version>${jaxb.version}</version>
+            </dependency>
         </dependencies>
+
     </dependencyManagement>
 
 </project>

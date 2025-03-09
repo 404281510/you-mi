@@ -28,6 +28,7 @@
         <module>you-mi-dependencies</module>
         <module>you-mi-framework</module>
         <module>you-mi-system</module>
+        <module>you-mi-leetcode</module>
 <!--        <module>you-mi-ai</module>-->
     </modules>
     <dependencyManagement>
