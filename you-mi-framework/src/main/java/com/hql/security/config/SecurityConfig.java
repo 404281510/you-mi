@@ -4,7 +4,6 @@ import com.hql.security.service.AuthenticationEntryPointImpl;
 import com.hql.security.service.LogoutSuccessHandlerImpl;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,6 +20,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -109,7 +111,24 @@ public class SecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .httpBasic(withDefaults())
                 .formLogin(withDefaults());
+        //允许跨域
+        http.cors((cors) -> cors.configurationSource(corsConfigurationSource()));
         return http.build();
     }
+
+    @Bean
+    public UrlBasedCorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.addAllowedOriginPattern("*");  //设置允许跨域请求的域名
+        config.addAllowedMethod("*");  //设置允许的请求方式
+        config.addAllowedHeader("*");  //设置允许的header属性
+        config.setAllowCredentials(true);  //是否允许cookie
+        config.setMaxAge(3600L);  //跨域允许时间
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);  //设置允许跨域的路径
+        return source;
+    }
+
 
 }

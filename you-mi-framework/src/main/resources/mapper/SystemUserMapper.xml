@@ -6,6 +6,7 @@
 
     <select id="selectByUserName" resultType="com.hql.sys.user.entity.SysUser" parameterType="string">
         select user_id as id,
+                status as status,
                user_name as userName,
                password as password
         from sys_user where user_name = #{userName}
