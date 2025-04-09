@@ -47,7 +47,7 @@ public class TestPermissionController {
     public String test4(){
         System.out.println("一个test4请求");
 
-        return "小张自傲张最终";
+        return "龙傲天之飞龙在天";
     }
 
     /*
@@ -55,13 +55,14 @@ public class TestPermissionController {
      * */
     @PostFilter("filterObject.length()>3")
     @GetMapping("/test5")
-    public String test5(){
+    public List<String> test5(){
         System.out.println("一个test4请求");
         List<String> list = new ArrayList<>();
-        list.add("张三");
-        list.add("王麻子");
-        list.add("狗叫什么");
-        return "一个test5请求";
+        list.add("张三3");
+        list.add("王麻子2");
+        list.add("狗叫什么1");
+        list.add("王麻子1");
+        return list;
     }
 
     /*

@@ -2,10 +2,8 @@ package com.hql.security.filter;
 
 
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import com.hql.exception.BizException;
 import com.hql.security.JWTUtils;
-import com.hql.security.entity.CustomUser;
 import io.jsonwebtoken.Claims;
 import jakarta.annotation.Resource;
 import jakarta.servlet.FilterChain;
@@ -14,7 +12,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
-import org.apache.ibatis.util.MapUtil;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,6 +24,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 类描述 -> Jwt认证过滤器
@@ -64,12 +62,13 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         }
 
         // 根据id查询redis中是否存在token，如果不存在，说明token过期了
-//        String redisKey = "login:" + userid;
-//        String jwt = (String) redisTemplate.opsForValue().get(redisKey);
-//        if (StringUtils.isEmpty(jwt)) {
-//            throw new RuntimeException("用户未登录");
-//        }
-
+        String redisKey = "login:" + userId;
+        String jwt = (String) redisTemplate.opsForValue().get(redisKey);
+        if (StringUtils.isEmpty(jwt)) {
+            throw new BizException("用户未登录");
+        }
+        //每次请求刷新token存活时间
+        redisTemplate.expire(redisKey,30, TimeUnit.MINUTES);
         // 存入SecurityContextHolder
         Collection<GrantedAuthority> authorityList = new ArrayList<>();
         for (String authority : authorities.split(",")) {

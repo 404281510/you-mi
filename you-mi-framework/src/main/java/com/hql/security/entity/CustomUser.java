@@ -29,13 +29,10 @@ public class CustomUser extends User {
     @Override
     public Collection<GrantedAuthority> getAuthorities() {
 
-        System.err.println("进入权限的获取方法");
-
         Set<SysRole> roles = new HashSet<>(sysUser.getSysRoleList());
         List<GrantedAuthority> authorities = new ArrayList<>(); // 授权信息列表
         // 将角色名称添加到授权信息列表中
-        roles.forEach(role->
-                authorities.add(new SimpleGrantedAuthority(role.getName())));
+        roles.forEach(role-> authorities.add(new SimpleGrantedAuthority(role.getName())));
         // 将权限名称添加到授权信息列表中
         authorities.add(new SimpleGrantedAuthority("拥有所有权限"));
         return authorities; // 返回授权信息列表

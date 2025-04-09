@@ -1,17 +1,17 @@
 package com.hql.login.service;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hql.db.aop.anno.DataSourceType;
 import com.hql.login.entity.LoginVo;
 import com.hql.security.JWTUtils;
 import com.hql.security.entity.CustomUser;
 import com.hql.sys.user.entity.SysUser;
 import jakarta.annotation.Resource;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -23,6 +23,8 @@ public class LoginServiceImpl implements LoginService {
     @Resource
     private AuthenticationManager authenticationManager;
 
+    @Resource
+    private RedisTemplate redisTemplate;
     @Override
     public Map<String, Object> login(LoginVo req) {
         // 将表单数据封装到 UsernamePasswordAuthenticationToken
@@ -41,6 +43,8 @@ public class LoginServiceImpl implements LoginService {
         resultMap.put("userName", sysUser.getUserName());
         resultMap.put("authorities", customUser.getAuthorities().stream().map(s -> s.getAuthority()).collect(Collectors.joining(",")));
         String token = JWTUtils.generateToken(resultMap,null);
+
+        boolean loginFlag = redisTemplate.opsForValue().setIfAbsent("login:"+ sysUser.getId().toString(), token, Duration.ofMinutes(2));
         Map<String, Object> map = new HashMap<>();
         map.put("token", token);
         return map;
